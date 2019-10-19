@@ -101,7 +101,7 @@ class XModel extends \Yii\base\Model
 
             foreach ($node as $key => $value)
             {
-                if (is_array($value) and ArrayHelper::isAssociative($value) )
+                if (is_array($value) and \yii\helpers\ArrayHelper::isAssociative($value) )
                     $value = $fn2Object($value);
 
                 $stdObj->$key = $value;
