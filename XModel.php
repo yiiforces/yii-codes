@@ -70,6 +70,10 @@ class XModel extends \Yii\base\Model
                                 'a2' => 94894,
                                 'a3' => 84484
                             ]
+                        ],
+                        'z4' => [
+                            'key1' => 'any value',
+                            'indexed' => [0,1,2,34,5,6,7,8,9],
                         ]
                     ]
                 ];
