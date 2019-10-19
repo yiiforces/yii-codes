@@ -27,87 +27,87 @@ What do you think about it?
 I leave the code in my git in case you want to see it.
 
 
-	Overload __get($name) to get some value from an index in fields with the object notation
+    Overload __get($name) to get some value from an index in fields with the object notation
 
-	Example use:
-	$model = new XModel();
-	$model->fullName == $model->toArray(['fullName'])['fullName']
-	$model->user->id == $model->toArray(['user'])['user']['id']
-	$model->anyArray->z->z3->z31->a3 == $model->toArray(['anyArray'])['anyArray']['z']['z3']['z31']['a3'] == 84484;
+    Example use:
+    $model = new XModel();
+    $model->fullName == $model->toArray(['fullName'])['fullName']
+    $model->user->id == $model->toArray(['user'])['user']['id']
+    $model->anyArray->z->z3->z31->a3 == $model->toArray(['anyArray'])['anyArray']['z']['z3']['z31']['a3'] == 84484;
 
 */
 
 class XModel extends \Yii\base\Model
 {
-	public $first_name;
-	public $last_name;
+    public $first_name;
+    public $last_name;
 
-	public function init()
-	{
-		parent::init();
-	}
-
-
-	public function fields()
-	{
-		return [
-			'user' =>function(){
-				return Yii::$app->user->identity; // example for ActiveRecord Model
-			},
-			'fullName' => function($model){
-				return $model->first_name . ' ' . $model->lastName;
-			},
-			'anyArray' => function(){
-				return [
-					'x' => 1,
-					'y' => 2,
-					'z' => [
-						'z1' => 'a' ,
-						'z2' => 'b' ,
-						'z3' => [
-							'z31' => [
-								'a1' => 55484,
-								'a2' => 94894,
-								'a3' => 84484
-							]
-						]
-					]
-				];
-			}
-		];
-	}
+    public function init()
+    {
+        parent::init();
+    }
 
 
-	public function __get($name)
-	{
-		$keysFields = array_keys($this->fields());
+    public function fields()
+    {
+        return [
+            'user' =>function(){
+                return Yii::$app->user->identity; // example for ActiveRecord Model
+            },
+            'fullName' => function($model){
+                return $model->first_name . ' ' . $model->lastName;
+            },
+            'anyArray' => function(){
+                return [
+                    'x' => 1,
+                    'y' => 2,
+                    'z' => [
+                        'z1' => 'a' ,
+                        'z2' => 'b' ,
+                        'z3' => [
+                            'z31' => [
+                                'a1' => 55484,
+                                'a2' => 94894,
+                                'a3' => 84484
+                            ]
+                        ]
+                    ]
+                ];
+            }
+        ];
+    }
 
-		if($this->canGetProperty($name) || !in_array($name, $keysFields) )
-			return parent::__get($name);
 
-		$fieldIndex  = $this->toArray([$name], [$name], true);
+    public function __get($name)
+    {
+        $keysFields = array_keys($this->fields());
 
-		if(!is_array($fieldIndex[$name]))
-			return $fieldIndex[$name];
+        if($this->canGetProperty($name) || !in_array($name, $keysFields) )
+            return parent::__get($name);
 
-		// convert array key field to object recursive:
-		$fn2Object = function ($node) use (&$fn2Object) {
+        $fieldIndex  = $this->toArray([$name], [$name], true);
 
-			$stdObj = new \stdClass();
+        if(!is_array($fieldIndex[$name]))
+            return $fieldIndex[$name];
 
-		    foreach ($node as $key => $value)
-		    {
-		    	if (is_array($value))
-		    		$value = $fn2Object($value);
+        // convert array key field to object recursive:
+        $fn2Object = function ($node) use (&$fn2Object) {
 
-		    	$stdObj->$key = $value;
-		    }
+            $stdObj = new \stdClass();
 
-		    return $stdObj;
-		};
+            foreach ($node as $key => $value)
+            {
+                if (is_array($value))
+                    $value = $fn2Object($value);
 
-		return $fn2Object($fieldIndex);
-	}
+                $stdObj->$key = $value;
+            }
+
+            return $stdObj;
+        };
+
+        return $fn2Object($fieldIndex);
+    }
 }
 
 
