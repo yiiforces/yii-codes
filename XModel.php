@@ -55,7 +55,7 @@ class XModel extends \Yii\base\Model
                 return Yii::$app->user->identity; // example for ActiveRecord Model
             },
             'fullName' => function($model){
-                return $model->first_name . ' ' . $model->lastName;
+                return $model->first_name . ' ' . $model->last_name;
             },
             'anyArray' => function(){
                 return [
@@ -85,7 +85,7 @@ class XModel extends \Yii\base\Model
         if($this->canGetProperty($name) || !in_array($name, $keysFields) )
             return parent::__get($name);
 
-        $fieldIndex  = $this->toArray([$name], [$name], true);
+        $fieldIndex = $this->toArray([$name], [$name], true);
 
         if(!is_array($fieldIndex[$name]))
             return $fieldIndex[$name];
@@ -97,7 +97,7 @@ class XModel extends \Yii\base\Model
 
             foreach ($node as $key => $value)
             {
-                if (is_array($value))
+                if (is_array($value) and ArrayHelper::isAssociative($value) )
                     $value = $fn2Object($value);
 
                 $stdObj->$key = $value;
