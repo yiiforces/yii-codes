@@ -78,7 +78,7 @@ class XModel extends \Yii\base\Model
 	}
 
 
-	public function __ge2t($name)
+	public function __get($name)
 	{
 		$keysFields = array_keys($this->fields());
 
