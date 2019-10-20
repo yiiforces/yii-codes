@@ -42,6 +42,12 @@ class XModel extends \Yii\base\Model
     public $first_name;
     public $last_name;
 
+    public function init()
+    {
+        parent::init();
+    }
+
+
     public function fields()
     {
         return [
@@ -88,7 +94,7 @@ class XModel extends \Yii\base\Model
             return $fieldIndex[$name];
 
         // convert array key field to object recursive:
-        $fn2Object = function ($node->$name) use (&$fn2Object) {
+        $fn2Object = function ($node) use (&$fn2Object) {
 
             $stdObj = new \stdClass();
 
@@ -103,7 +109,7 @@ class XModel extends \Yii\base\Model
             return $stdObj;
         };
 
-        return $fn2Object($fieldIndex);
+        return $fn2Object($fieldIndex[$name]);
     }
 }
 
