@@ -110,7 +110,8 @@ class XModel extends \Yii\base\Model
             return $stdObj;
         };
 
-        return $fn2Object($fieldIndex);
+        $list = $fn2Object($fieldIndex);
+        return $list->$name;
     }
 }
 
