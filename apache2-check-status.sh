@@ -4,10 +4,9 @@
 #  https://www.cyberciti.biz/faq/linux-execute-cron-job-after-system-reboot/
 #  @reboot /usr/bin/apache2-check-status.sh
 sleep 60
+echo "init a2 watchdog" > /tmp/a2ck.log;
 while true
-do
-	echo "init a2 watchdog loop" > /tmp/a2ck.log;
-    
+do   
     RETVAL=0
     /usr/sbin/apachectl configtest > /dev/null 2>&1
     RETVAL=$?
@@ -20,7 +19,7 @@ do
 
     status=$(curl -I -s  localhost:80 | grep HTTP)
     if [ "$status" != "" ]; then
-        echo "http headers "$status  >> /tmp/a2ck.log
+        #echo "http headers "$status  >> /tmp/a2ck.log
         #echo "http headers "$status;
         sleep 1
         continue;
